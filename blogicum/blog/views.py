@@ -7,8 +7,9 @@ from blog.models import Post
 
 def index(request):
     template = "blog/index.html"
-    post_list = Post.objects.values()
-    context = {"posts": reversed(posts)}
+    post_list = Post.objects.select_related(
+        )
+    context = {"post_list": post_list}
     return render(request, template, context)
 
 
