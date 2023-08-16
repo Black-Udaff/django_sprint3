@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from blog.models import Post, Category
 from django.utils import timezone
 
+NUMBER_OF_POSTS = 5
+
 
 def index(request):
     template = "blog/index.html"
@@ -13,7 +15,7 @@ def index(request):
             is_published=True,
             category__is_published=True,
         )
-        .order_by("-pub_date")[:5]
+        .order_by("-pub_date")[:NUMBER_OF_POSTS]
     )
     context = {"post_list": post_list}
     return render(request, template, context)
