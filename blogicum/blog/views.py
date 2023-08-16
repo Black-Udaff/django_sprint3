@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseNotFound
 from blog.models import Post, Category
 from django.utils import timezone
 
@@ -10,7 +9,9 @@ def index(request):
     post_list = (
         Post.objects.select_related("author", "location", "category")
         .filter(
-            pub_date__lte=current_time, is_published=True, category__is_published=True
+            pub_date__lte=current_time,
+            is_published=True,
+            category__is_published=True,
         )
         .order_by("-pub_date")[:5]
     )
@@ -34,7 +35,9 @@ def post_detail(request, pk):
 
 def category_posts(request, category_slug):
     template = "blog/category.html"
-    category = get_object_or_404(Category, slug=category_slug, is_published=True)
+    category = get_object_or_404(
+        Category, slug=category_slug, is_published=True
+    )
     post_list = Post.objects.filter(
         pub_date__lte=timezone.now(), is_published=True, category=category
     )
