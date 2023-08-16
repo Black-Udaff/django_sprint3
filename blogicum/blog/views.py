@@ -1,27 +1,42 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseNotFound
-from blog.models import Post
-
-
+from blog.models import Post, Category
+from django.utils import timezone
 
 
 def index(request):
     template = "blog/index.html"
-    post_list = Post.objects.values()
-    context = {"posts": reversed(posts)}
+    current_time = timezone.now()
+    post_list = (
+        Post.objects.select_related("author", "location", "category")
+        .filter(
+            pub_date__lte=current_time, is_published=True, category__is_published=True
+        )
+        .order_by("-pub_date")[:5]
+    )
+    context = {"post_list": post_list}
     return render(request, template, context)
 
 
 def post_detail(request, pk):
     template = "blog/detail.html"
-    for post in posts:
-        if post['id'] == pk:
-            context = {'post': post}
-            return render(request, template, context)
-    return HttpResponseNotFound("Пост не найден")
+    post = get_object_or_404(
+        Post.objects.select_related().filter(
+            pk=pk,
+            pub_date__lte=timezone.now(),
+            is_published=True,
+            category__is_published=True,
+        )
+    )
+    context = {"post": post}
+    return render(request, template, context)
 
 
 def category_posts(request, category_slug):
     template = "blog/category.html"
-    context = {"category_slug": category_slug}
+    category = get_object_or_404(Category, slug=category_slug, is_published=True)
+    post_list = Post.objects.filter(
+        pub_date__lte=timezone.now(), is_published=True, category=category
+    )
+    context = {"category": category, "post_list": post_list}
     return render(request, template, context)
