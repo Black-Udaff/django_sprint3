@@ -20,7 +20,11 @@ class Post(models.Model):
         User, on_delete=models.CASCADE, verbose_name="Автор публикации"
     )
     location = models.ForeignKey(
-        "Location", blank=True, null=True, on_delete=models.SET_NULL
+        "Location",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        verbose_name='Местоположение',
     )
     category = models.ForeignKey(
         "Category",
@@ -29,7 +33,7 @@ class Post(models.Model):
         verbose_name="Категория",
     )
     is_published = models.BooleanField(
-        "Опубликованно",
+        "Опубликовано",
         default=True,
         help_text="Снимите галочку, чтобы скрыть публикацию.",
     )
@@ -47,14 +51,15 @@ class Category(models.Model):
     title = models.CharField("Заголовок", max_length=256)
     description = models.TextField("Описание")
     slug = models.SlugField(
-        "Индентификатор",
+        "Идентификатор",
+        unique=True,
         help_text=(
             "Идентификатор страницы для URL; разрешены символы латиницы,"
             " цифры, дефис и подчёркивание."
         ),
     )
     is_published = models.BooleanField(
-        "Опубликованно",
+        "Опубликовано",
         default=True,
         help_text="Снимите галочку, чтобы скрыть публикацию.",
     )
@@ -71,7 +76,7 @@ class Category(models.Model):
 class Location(models.Model):
     name = models.CharField("Название места", max_length=256)
     is_published = models.BooleanField(
-        "Опубликованно",
+        "Опубликовано",
         default=True,
         help_text="Снимите галочку, чтобы скрыть публикацию.",
     )
