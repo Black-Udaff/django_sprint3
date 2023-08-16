@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-# Create your models here.
 
 User = get_user_model()
 
@@ -17,7 +16,10 @@ class Post(models.Model):
         ),
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name="Автор публикации"
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Автор публикации",
+        related_name='posts',
     )
     location = models.ForeignKey(
         "Location",
@@ -25,12 +27,14 @@ class Post(models.Model):
         null=True,
         on_delete=models.SET_NULL,
         verbose_name='Местоположение',
+        related_name='posts',
     )
     category = models.ForeignKey(
         "Category",
         null=True,
         on_delete=models.SET_NULL,
         verbose_name="Категория",
+        related_name='posts',
     )
     is_published = models.BooleanField(
         "Опубликовано",
