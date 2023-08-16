@@ -5,10 +5,6 @@ from django.utils import timezone
 
 def index(request):
     template = "blog/index.html"
-<<<<<<< HEAD
-    post_list = Post.objects.select_related(
-        )
-=======
     current_time = timezone.now()
     post_list = (
         Post.objects.select_related("author", "location", "category")
@@ -19,7 +15,6 @@ def index(request):
         )
         .order_by("-pub_date")[:5]
     )
->>>>>>> fc5462a04d828d9299cf5adfdfb60cb7a16e679a
     context = {"post_list": post_list}
     return render(request, template, context)
 
