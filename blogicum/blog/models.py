@@ -77,6 +77,9 @@ class Category(BaseModel):
 class Location(BaseModel):
     name = models.CharField("Название места", max_length=256)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = "местоположение"
         verbose_name_plural = "Местоположения"
