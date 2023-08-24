@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from blog.models import Post, Category
 from django.utils import timezone
+from .forms import PostForm
 
 
 NUMBER_OF_POSTS = 5
@@ -45,4 +46,19 @@ def category_posts(request, category_slug):
         pub_date__lte=timezone.now(), is_published=True, category=category
     )
     context = {"category": category, "post_list": post_list}
+    return render(request, template, context)
+
+
+def post_create(request):
+    template = "blog/create.html"
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            
+            
+            form.save()
+    form = PostForm()
+    context = {
+        'form': form
+    }
     return render(request, template, context)
